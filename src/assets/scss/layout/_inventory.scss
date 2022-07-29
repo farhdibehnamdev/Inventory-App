@@ -1,6 +1,44 @@
 .inventory {
+  padding: 2rem;
   display: flex;
-  align-items: center;
+  min-height: 100vh;
+  &__sidebar-title {
+    letter-spacing: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    color: var(--default--color);
+  }
+  &__sidebar {
+    flex: 1 1 0;
+    max-width: 30rem;
+    padding: 2rem 1rem;
+    border-radius: 2rem 0 0 2rem;
+    color: var(--font--color--sidebar-1);
+    background-color: var(--background--color-3);
+  }
+  &__main {
+    padding: 2rem;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex: 1;
+    background-color: var(--background--color-1);
+    border-radius: 0 2rem 2rem 0;
+  }
+}
 
-  border-radius: 1rem;
+.menu {
+  padding: 2rem;
+  list-style: none;
+  font-size: 1.8rem;
+}
+
+.menu a {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.table {
+  background-color: var(--default--color);
+  border-radius: 0.5rem;
 }
