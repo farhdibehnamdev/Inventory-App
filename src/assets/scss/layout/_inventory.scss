@@ -16,11 +16,12 @@
     color: var(--font--color--sidebar-1);
     background-color: var(--background--color-3);
   }
+
   &__main {
     padding: 2rem;
     display: flex;
-    align-content: center;
-    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
     flex: 1;
     background-color: var(--background--color-1);
     border-radius: 0 2rem 2rem 0;
@@ -39,6 +40,16 @@
 }
 
 .table {
+  font-size: 1.8rem;
   background-color: var(--default--color);
   border-radius: 0.5rem;
+  width: 120rem;
+  border-collapse: separate;
+  border-spacing: 0 26px;
+  text-align: center;
+  &__thead {
+    padding: 20px;
+    border-radius: 0.5rem;
+    background-color: rgb(14, 180, 44);
+  }
 }
