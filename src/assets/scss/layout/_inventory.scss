@@ -7,6 +7,7 @@
     padding: 2rem;
     text-align: center;
     color: var(--default--color);
+    margin-bottom: 3rem;
   }
   &__sidebar {
     flex: 1 1 0;
@@ -43,7 +44,7 @@
   // }
   &__search {
     border-radius: 0.5rem;
-    border: 2px solid #949292;
+    border: 2px solid transparent;
     color: var(--background--color-3);
     font-weight: 600;
     font-size: 1.5rem;
@@ -52,13 +53,16 @@
     background-color: #e8e8e8;
   }
   &__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 0.5rem;
     border: 1px solid #c3c3ce;
     color: var(--background--color-3);
     font-weight: 600;
     font-size: 1.5rem;
     outline: none;
-    padding: 1rem 5rem 1rem 5rem;
+    padding: 1rem 3rem 1rem 3rem;
     background-color: rgb(245, 245, 246);
     box-shadow: 0px 2px 2px 0px #878894;
   }
@@ -71,8 +75,11 @@
 }
 
 .menu a {
-  display: block;
-  margin-bottom: 2rem;
+  display: flex;
+  empty-cells: 2rem;
+  align-items: center;
+  margin-bottom: 4rem;
+  gap: 1.5rem;
 }
 
 .table {

@@ -5,14 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inventory-App</title>
+    <script src="https://unpkg.com/phosphor-icons"></script>
   </head>
   <body>
     <div class="inventory">
       <aside class="inventory__sidebar">
         <h2 class="inventory__sidebar-title">INVENTORY APP</h2>
         <nav class="menu">
-          <a class="menu__products selected">Products</a>
-          <a class="menu__categories">Categories</a>
+          <a class="menu__products selected"
+            ><i class="ph-cards-bold ph-lg"></i><span>Products</span></a
+          >
+          <a class="menu__categories"
+            ><i class="ph-folder-notch-open-bold ph-lg"></i
+            ><span>Categories</span></a
+          >
         </nav>
       </aside>
       <main class="inventory__main">
@@ -24,9 +30,12 @@
                 type="text"
                 class="inventory__search"
               />
+              <i class="ph-magnifying-glass-bold"></i>
             </div>
             <div class="inventory__add">
-              <button class="inventory__btn">Add</button>
+              <button class="inventory__btn">
+                <i class="ph-plus-bold ph-xl"></i> <span>Add</span>
+              </button>
             </div>
           </div>
           <table class="table">
