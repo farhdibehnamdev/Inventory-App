@@ -16,7 +16,9 @@
     color: var(--font--color--sidebar-1);
     background-color: var(--background--color-3);
   }
-
+  &__main-container {
+    margin-top: 10rem;
+  }
   &__main {
     padding: 2rem;
     display: flex;
@@ -25,6 +27,40 @@
     flex: 1;
     background-color: var(--background--color-1);
     border-radius: 0 2rem 2rem 0;
+  }
+  &__main-container {
+    background-color: var(--default--color);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0px 2px 2px 0px #878894;
+  }
+  &__opearation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  // &__search-container {
+  // }
+  &__search {
+    border-radius: 0.5rem;
+    border: 2px solid #949292;
+    color: var(--background--color-3);
+    font-weight: 600;
+    font-size: 1.5rem;
+    outline: none;
+    padding: 1rem;
+    background-color: #e8e8e8;
+  }
+  &__btn {
+    border-radius: 0.5rem;
+    border: 1px solid #c3c3ce;
+    color: var(--background--color-3);
+    font-weight: 600;
+    font-size: 1.5rem;
+    outline: none;
+    padding: 1rem 5rem 1rem 5rem;
+    background-color: rgb(245, 245, 246);
+    box-shadow: 0px 2px 2px 0px #878894;
   }
 }
 
@@ -47,9 +83,23 @@
   border-collapse: separate;
   border-spacing: 0 26px;
   text-align: center;
+
   &__thead {
     padding: 20px;
     border-radius: 0.5rem;
-    background-color: rgb(14, 180, 44);
+    background-color: rgb(3, 59, 102);
+  }
+  &__row th {
+    padding: 2rem;
+    color: var(--default--color);
+  }
+  &__row td {
+    padding: 2rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #0f1023;
+  }
+  &__row.odd td {
+    background-color: rgb(214, 218, 218);
   }
 }
