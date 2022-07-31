@@ -72,14 +72,20 @@
   padding: 2rem;
   list-style: none;
   font-size: 1.8rem;
+  &__selected {
+    background-color: #ffffff;
+    color: #000;
+  }
 }
 
 .menu a {
   display: flex;
   empty-cells: 2rem;
   align-items: center;
-  margin-bottom: 4rem;
+  padding: 2rem;
   gap: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
 }
 
 .table {
