@@ -54,37 +54,50 @@
       <div class="modal__content">
         <div class="modal__header">
           <span class="close">&times;</span>
-          <h2>Modal Header</h2>
+          <h2>Add Product</h2>
         </div>
         <div class="modal__body modal__products">
-          <!-- <p>Some text in the modal body2</p>
-          <p>Some other text ....</p> -->
-          <h2>Add Product</h2>
           <div class="form-container">
             <form class="form">
               <div class="form__row">
                 <div>
                   <div>
-                    <label for="title">Title</label>
+                    <label for="title" class="form__label">Title</label>
                   </div>
-                  <input name="title" class="from__title" type="text" />
+                  <input
+                    name="title"
+                    class="from__title"
+                    type="text"
+                    placeholder="Title"
+                  />
                 </div>
+              </div>
+              <div class="form__row">
                 <div>
-                  <div>
-                    <label for="quantity">Quantity</label>
-                  </div>
-                  <input name="quantity" class="form__quantity" type="text" />
+                  <label for="quantity" class="form__label">Quantity</label>
                 </div>
-                <div>
-                  <input type="file" class="form__picture" />
-                </div>
-                <div>
+                <input
+                  name="quantity"
+                  class="form__quantity"
+                  type="text"
+                  placeholder="Quantity"
+                />
+              </div>
+              <div class="form__row">
+                <div class="form__options">
                   <select class="form__select-category">
                     <option value="">Select a Category</option>
+                    <option value="">1</option>
+                    <option value="">2</option>
+                    <option value="">3</option>
                   </select>
                 </div>
+              </div>
               <div class="form__row">
-                <button class="form__btn-submit">Submit</button>
+                <div>
+                  <div><label for="picture"></label></div>
+                  <input type="file" class="form__picture" />
+                </div>
               </div>
             </form>
           </div>
@@ -93,7 +106,12 @@
           <p>Some text in the modal body1</p>
           <p>Some other text ....</p>
         </div>
-        <div class="modal__footer"><h3>Modal Footer</h3></div>
+        <div class="modal__footer">
+          <div class="btn">
+            <button class="btn btn-cancel">Cancel</button>
+            <button class="btn btn-submit">Submit</button>
+          </div>
+        </div>
       </div>
     </div>
   </body>
