@@ -173,6 +173,7 @@
   }
   &__header {
     border-bottom: 1px solid #dee2e6;
+    color: var(--background--color-3);
   }
 
   &__body {
@@ -229,6 +230,8 @@
     border: none;
     width: 100%;
     background: white;
+    padding: 0 2rem;
+    outline: 0;
   }
 
   &__options {
