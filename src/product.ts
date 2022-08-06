@@ -9,7 +9,7 @@ export class Product implements IProduct {
     this._id = idGenerator();
   }
 
-  get id() {
+  get id(): string {
     return this._id;
   }
 }

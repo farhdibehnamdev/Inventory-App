@@ -1,4 +1,5 @@
 import { ProductView } from "./productview";
+
 import "./assets/scss/style.scss";
 const productMenu = document.querySelector(".menu__products");
 class App {
@@ -10,7 +11,7 @@ class App {
     if (productMenu) {
       const product = new ProductView();
     } else {
-      const category = new Entity<Category>();
+      // const category = new Entity<ICategory>();
     }
   }
 }

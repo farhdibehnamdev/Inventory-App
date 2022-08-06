@@ -38,14 +38,12 @@ export class ProductView {
 
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
   }
+
   private _selectCategoryHandler(e: Event) {
-    const categoryElement = document.querySelector<HTMLSelectElement>("option");
-    const element = categoryElement?.value;
-    // this._categoryValue = element.value;
-    console.log(
-      "salam :: ",
-      categoryElement?.options[categoryElement.selectedIndex].value
+    const select = document.querySelector<HTMLSelectElement>(
+      ".form__select-category"
     );
+    this._categoryValue = select?.options[select?.selectedIndex].value!;
   }
   private _addButtonHandler() {
     const newProduct = new Product(
