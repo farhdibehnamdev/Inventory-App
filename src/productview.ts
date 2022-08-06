@@ -1,5 +1,7 @@
 import { Product } from "./product";
+import { Types } from "./entity";
 import Entity from "./entity";
+
 const btn = document.querySelector<HTMLButtonElement>(".inventory__btn");
 const tableThead = document.querySelector<HTMLTableElement>(
   ".table-products thead tr"
@@ -23,7 +25,7 @@ export class ProductView {
   private _categoryValue: string = "";
   constructor() {
     this._createHeaderTable();
-    this._product = new Entity<IProduct>();
+    this._product = new Entity<IProduct>(Types.IProduct);
     btn?.addEventListener("click", this._openModal.bind(this));
     this._span = document.querySelector<HTMLElement>(".close")!;
     this._span.addEventListener("click", this._closeModal.bind(this));
@@ -88,7 +90,13 @@ export class ProductView {
     <td>${item.title}</td>
     <td>${item.quantity}</td>
     <td>${item.category}</td>
-    <td>Delete and Edit</td>
+    <td><button data-id="${item.id}" class="btn-delete" >
+    <i class="ph-trash-bold "></i>
+    <span>Delete</span>
+    </button> <button data-id="${item.id}" class="btn-edit">
+    <i class="ph-pencil-simple-bold"></i>
+    <span>Edit</span>
+    </button></td>
   </tr>`;
   }
 }
