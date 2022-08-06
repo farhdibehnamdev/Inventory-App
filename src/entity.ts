@@ -1,6 +1,11 @@
-class Entity<T extends Product | Category> {
+export enum Types {
+  IProduct = 1,
+  ICategory = 2,
+}
+
+class Entity<T extends IProduct | ICategory> {
   private _storage: T[];
-  constructor() {
+  constructor(public currentType: Types) {
     this._storage = [];
   }
   add(item: T): void {
@@ -18,7 +23,17 @@ class Entity<T extends Product | Category> {
     return this._storage.filter((x) => x.title === title);
   }
   _saveStorage(item: T): void {
-    localStorage.setItem(`${typeof item}`, JSON.stringify(item));
+    if (this.currentType === Types.IProduct)
+      localStorage.setItem("Product", JSON.stringify(this._storage));
+    else {
+      localStorage.setItem("Category", JSON.stringify(this._storage));
+    }
+  }
+
+  get storage(): T[] {
+    return this._storage;
   }
   loadAllDataFromStorage() {}
 }
+
+export default Entity;
