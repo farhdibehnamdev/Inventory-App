@@ -1,7 +1,7 @@
 import { Product } from "./product";
 import { Types } from "./entity";
 import Entity from "./entity";
-
+import { View } from "./view";
 const btn = document.querySelector<HTMLButtonElement>(".inventory__btn");
 const tableThead = document.querySelector<HTMLTableElement>(
   ".table-products thead tr"
@@ -19,16 +19,17 @@ const inputQuantity =
 
 btn?.classList.add("btn-product");
 
-export class ProductView {
+export class ProductView extends View {
   private _span: HTMLElement;
   private _product: Entity<IProduct>;
   private _categoryValue: string = "";
   constructor() {
+    super();
     this._createHeaderTable();
     this._product = new Entity<IProduct>(Types.IProduct);
-    btn?.addEventListener("click", this._openModal.bind(this));
+    btn?.addEventListener("click", this._openModal);
     this._span = document.querySelector<HTMLElement>(".close")!;
-    this._span.addEventListener("click", this._closeModal.bind(this));
+    this._span.addEventListener("click", this._closeModal);
 
     document.addEventListener("click", (e: Event) =>
       this._closeModalWindowClicked(e)
@@ -47,16 +48,16 @@ export class ProductView {
     );
     this._categoryValue = select?.options[select?.selectedIndex].value!;
   }
-  private _addButtonHandler() {
-    const newProduct = new Product(
-      inputTitle?.value!,
-      this._categoryValue,
-      Number.parseInt(inputQuantity?.value!)
-    );
-    this._product.add(newProduct);
-    this._renderTable();
-    this._closeModal();
-  }
+  // private _addButtonHandler() {
+  //   const newProduct = new Product(
+  //     inputTitle?.value!,
+  //     this._categoryValue,
+  //     Number.parseInt(inputQuantity?.value!)
+  //   );
+  //   this._product.add(newProduct);
+  //   this._renderTable();
+  //   this._closeModal();
+  // }
   private _createHeaderTable(): void {
     if (tableThead) {
       tableThead.innerHTML = `<th>#</th>
@@ -78,7 +79,6 @@ export class ProductView {
   private _renderTable(): void {
     tableBody!.innerText = "";
     const products = this._product.storage;
-    console.log("storage__product ::", products);
     const allProduct = products.map((product: IProduct, index) => {
       return this._tableUIBody(<Product>product, index);
     });
