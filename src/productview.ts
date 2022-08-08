@@ -1,45 +1,35 @@
+import {
+  btn,
+  tableThead,
+  tableBody,
+  btnSubmit,
+  inputTitle,
+  categoryElement,
+  inputQuantity,
+  modalContentCategory,
+  modalContentProduct,
+} from "./dom";
 import { Product } from "./product";
 import { Types } from "./entity";
 import Entity from "./entity";
 import { View } from "./view";
-const btn = document.querySelector<HTMLButtonElement>(".inventory__btn");
-const tableThead = document.querySelector<HTMLTableElement>(
-  ".table-products thead tr"
-);
-const tableBody = document.querySelector<HTMLTableElement>(".table__tbody");
-const modalPopup = document.querySelector<HTMLElement>("#myModal")!;
-let span = document.querySelector<HTMLElement>(".close");
-const btnSubmit = document.querySelector<HTMLButtonElement>(".btn-submit");
-const inputTitle = document.querySelector<HTMLInputElement>(".form__title");
-const categoryElement = document.querySelector<HTMLSelectElement>(
-  ".form__select-category"
-);
-const inputQuantity =
-  document.querySelector<HTMLInputElement>(".form__quantity");
-
 btn?.classList.add("btn-product");
 
 export class ProductView extends View {
-  private _span: HTMLElement;
   private _product: Entity<IProduct>;
   private _categoryValue: string = "";
   constructor() {
     super();
     this._createHeaderTable();
+    this._createModal();
     this._product = new Entity<IProduct>(Types.IProduct);
     btn?.addEventListener("click", this._openModal);
-    this._span = document.querySelector<HTMLElement>(".close")!;
-    this._span.addEventListener("click", this._closeModal);
-
-    document.addEventListener("click", (e: Event) =>
-      this._closeModalWindowClicked(e)
-    );
-
-    categoryElement?.addEventListener("change", (e: Event) =>
-      this._selectCategoryHandler(e)
-    );
-
-    btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
+    btnSubmit?.addEventListener("click", this._addButtonHandler);
+    categoryElement?.addEventListener("change", this._selectCategoryHandler);
+  }
+  private _createModal() {
+    modalContentCategory?.classList.add("hidden");
+    modalContentProduct?.classList.remove("hidden");
   }
 
   private _selectCategoryHandler(e: Event) {
@@ -48,16 +38,16 @@ export class ProductView extends View {
     );
     this._categoryValue = select?.options[select?.selectedIndex].value!;
   }
-  // private _addButtonHandler() {
-  //   const newProduct = new Product(
-  //     inputTitle?.value!,
-  //     this._categoryValue,
-  //     Number.parseInt(inputQuantity?.value!)
-  //   );
-  //   this._product.add(newProduct);
-  //   this._renderTable();
-  //   this._closeModal();
-  // }
+  private _addButtonHandler() {
+    const newProduct = new Product(
+      inputTitle?.value!,
+      this._categoryValue,
+      Number.parseInt(inputQuantity?.value!)
+    );
+    this._product.add(newProduct);
+    this._renderTable();
+    this._closeModal();
+  }
   private _createHeaderTable(): void {
     if (tableThead) {
       tableThead.innerHTML = `<th>#</th>
@@ -67,15 +57,7 @@ export class ProductView extends View {
         <th></th>`;
     }
   }
-  private _openModal() {
-    modalPopup.style.display = "block";
-  }
-  private _closeModal() {
-    modalPopup.style.display = "none";
-  }
-  private _closeModalWindowClicked(e: Event) {
-    if (e.target === modalPopup) modalPopup.style.display = "none";
-  }
+
   private _renderTable(): void {
     tableBody!.innerText = "";
     const products = this._product.storage;
