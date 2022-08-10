@@ -13,26 +13,25 @@ import { Category } from "./category";
 import { View } from "./view";
 
 export class CategoryView extends View {
-  private _category: Entity<ICategory>;
-  constructor() {
+  private _categoryInventory: Entity<ICategory>;
+  constructor(categoryInventory: Entity<ICategory>) {
     super();
-    this._createHeaderTable();
-    this._category = new Entity<ICategory>(Types.ICategory);
-    this._createModal();
+    console.log("create Category::", this);
+    this._categoryInventory = categoryInventory;
     btn?.addEventListener("click", this._openModal);
-    btnSubmit?.addEventListener("click", this._addButtonHandler);
+    btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
   }
+
+  initCategoryUI() {
+    this._createModal();
+    this._createHeaderTable();
+    this._renderTable();
+  }
+
   private _createModal() {
     modalContentProduct?.classList.add("hidden");
     modalContentCategory?.classList.remove("hidden");
     modalHeader!.innerHTML = "Add Category";
-  }
-
-  _addButtonHandler() {
-    const newProduct = new Category(inputTitle?.value!);
-    this._category.add(newProduct);
-    this._renderTable();
-    this._closeModal();
   }
   private _createHeaderTable(): void {
     if (tableThead) {
@@ -41,10 +40,16 @@ export class CategoryView extends View {
         <th></th>`;
     }
   }
+  _addButtonHandler() {
+    const newCategory = new Category(inputTitle?.value!);
+    this._categoryInventory.add(newCategory);
+    this._renderTable();
+    this._closeModal();
+  }
 
   private _renderTable(): void {
     tableBody!.innerText = "";
-    const categories = this._category.storage;
+    const categories = this._categoryInventory.storage;
     const allCategory = categories.map((category: ICategory, index) => {
       return this._tableUIBody(<Category>category, index);
     });

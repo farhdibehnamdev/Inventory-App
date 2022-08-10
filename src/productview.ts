@@ -8,45 +8,36 @@ import {
   inputQuantity,
   modalContentCategory,
   modalContentProduct,
+  modalHeader,
 } from "./dom";
 import { Product } from "./product";
-import { Types } from "./entity";
 import Entity from "./entity";
 import { View } from "./view";
 btn?.classList.add("btn-product");
 
 export class ProductView extends View {
-  private _product: Entity<IProduct>;
   private _categoryValue: string = "";
-  constructor() {
+  private _productInventory: Entity<IProduct>;
+  constructor(inventory: Entity<IProduct>) {
     super();
-    this._createHeaderTable();
-    this._createModal();
-    this._product = new Entity<IProduct>(Types.IProduct);
+    console.log("create Product::", this);
+
+    this._productInventory = inventory;
     btn?.addEventListener("click", this._openModal);
-    btnSubmit?.addEventListener("click", this._addButtonHandler);
+    btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
     categoryElement?.addEventListener("change", this._selectCategoryHandler);
   }
+
+  public initUI() {
+    this._createModal();
+    this._createHeaderTable();
+    this._renderTable();
+  }
+
   private _createModal() {
     modalContentCategory?.classList.add("hidden");
     modalContentProduct?.classList.remove("hidden");
-  }
-
-  private _selectCategoryHandler(e: Event) {
-    const select = document.querySelector<HTMLSelectElement>(
-      ".form__select-category"
-    );
-    this._categoryValue = select?.options[select?.selectedIndex].value!;
-  }
-  private _addButtonHandler() {
-    const newProduct = new Product(
-      inputTitle?.value!,
-      this._categoryValue,
-      Number.parseInt(inputQuantity?.value!)
-    );
-    this._product.add(newProduct);
-    this._renderTable();
-    this._closeModal();
+    modalHeader!.innerHTML = "Add Product";
   }
   private _createHeaderTable(): void {
     if (tableThead) {
@@ -56,15 +47,6 @@ export class ProductView extends View {
         <th>Category</th>
         <th></th>`;
     }
-  }
-
-  private _renderTable(): void {
-    tableBody!.innerText = "";
-    const products = this._product.storage;
-    const allProduct = products.map((product: IProduct, index) => {
-      return this._tableUIBody(<Product>product, index);
-    });
-    tableBody!.innerHTML += allProduct.join("");
   }
   private _tableUIBody(item: Product, id: number) {
     return `<tr class="table__row ${++id % 2 != 0 ? "odd" : ""}">
@@ -80,5 +62,29 @@ export class ProductView extends View {
     <span>Edit</span>
     </button></td>
   </tr>`;
+  }
+  private _selectCategoryHandler(e: Event) {
+    const select = document.querySelector<HTMLSelectElement>(
+      ".form__select-category"
+    );
+    this._categoryValue = select?.options[select?.selectedIndex].value!;
+  }
+  private _addButtonHandler() {
+    const newProduct = new Product(
+      inputTitle?.value!,
+      this._categoryValue,
+      Number.parseInt(inputQuantity?.value!)
+    );
+    this._productInventory?.add(newProduct);
+    this._renderTable();
+    this._closeModal();
+  }
+  private _renderTable(): void {
+    tableBody!.innerText = "";
+    const categories = this._productInventory.storage;
+    const allCategory = categories.map((category: ICategory, index) => {
+      return this._tableUIBody(<Product>category, index);
+    });
+    tableBody!.innerHTML += allCategory.join("");
   }
 }
