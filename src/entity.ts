@@ -31,8 +31,12 @@ class Entity<T extends IProduct | ICategory> {
   }
 
   get storage(): T[] {
-    return this._storage;
+    const type = this.currentType === Types.IProduct ? "Product" : "Category";
+    const stringifyData = JSON.stringify(localStorage.getItem(type));
+    const obj: T[] = <T[]>JSON.parse(stringifyData);
+    return obj;
   }
+
   loadAllDataFromStorage() {}
 }
 
