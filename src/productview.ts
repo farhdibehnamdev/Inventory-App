@@ -11,18 +11,20 @@ import {
   modalHeader,
 } from "./dom";
 import { Product } from "./product";
-import Entity from "./entity";
+import Entity, { Types } from "./entity";
 import { View } from "./view";
+import { ActiveEntity } from "./ActiveEntity";
 btn?.classList.add("btn-product");
 
 export class ProductView extends View {
   private _categoryValue: string = "";
   private _productInventory: Entity<IProduct>;
-  constructor(inventory: Entity<IProduct>) {
+  private _activeMenu: ActiveEntity;
+  constructor(inventory: Entity<IProduct>, activeClass: ActiveEntity) {
     super();
-    console.log("create Product::", this);
 
     this._productInventory = inventory;
+    this._activeMenu = activeClass;
     btn?.addEventListener("click", this._openModal);
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
     categoryElement?.addEventListener("change", this._selectCategoryHandler);
@@ -70,21 +72,36 @@ export class ProductView extends View {
     this._categoryValue = select?.options[select?.selectedIndex].value!;
   }
   private _addButtonHandler() {
-    const newProduct = new Product(
-      inputTitle?.value!,
-      this._categoryValue,
-      Number.parseInt(inputQuantity?.value!)
-    );
-    this._productInventory?.add(newProduct);
-    this._renderTable();
-    this._closeModal();
+    if (this._activeMenu.active === Types.IProduct) {
+      const newProduct = new Product(
+        inputTitle?.value!,
+        this._categoryValue,
+        Number.parseInt(inputQuantity?.value!)
+      );
+      this._productInventory?.add(newProduct);
+      this._renderTable();
+      this._closeModal();
+    }
   }
   private _renderTable(): void {
     tableBody!.innerText = "";
-    const categories = this._productInventory.storage;
-    const allCategory = categories.map((category: ICategory, index) => {
-      return this._tableUIBody(<Product>category, index);
-    });
-    tableBody!.innerHTML += allCategory.join("");
+    const stringifyData = this._productInventory.storage;
+    if (stringifyData) {
+      const obj = JSON.parse(stringifyData.toString());
+
+      let products: IProduct[] = [];
+
+      for (let i in obj) {
+        if (obj.hasOwnProperty(i)) {
+          products.push(obj[i]);
+        }
+      }
+      const allProducts = products.map((product: IProduct, index) => {
+        return this._tableUIBody(<Product>product, index);
+      });
+      tableBody!.innerHTML += allProducts.join("");
+    } else {
+      tableBody!.innerHTML = "";
+    }
   }
 }
