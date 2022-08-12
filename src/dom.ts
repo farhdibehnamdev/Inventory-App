@@ -28,6 +28,9 @@ export const modalHeader =
 /// Modal's Form Elements
 export const inputTitle =
   document.querySelector<HTMLInputElement>(".form__title");
+export const categoryInputTitle = document.querySelector<HTMLInputElement>(
+  ".form__categoryTitle"
+);
 export const categoryElement = document.querySelector<HTMLSelectElement>(
   ".form__select-category"
 );
