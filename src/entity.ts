@@ -7,6 +7,15 @@ class Entity<T extends IProduct | ICategory> {
   private _storage: T[];
   constructor(public currentType: Types) {
     this._storage = [];
+    this._loadData();
+  }
+  private _loadData(): void {
+    if (this.storage) {
+      const data = <T[]>JSON.parse(this.storage.toString());
+      for (let i in data) {
+        this._storage.push(data[i]);
+      }
+    }
   }
   add(item: T): void {
     this._storage.push(item);
