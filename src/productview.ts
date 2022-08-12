@@ -14,15 +14,21 @@ import { Product } from "./product";
 import Entity, { Types } from "./entity";
 import { View } from "./view";
 import { ActiveEntity } from "./ActiveEntity";
+import { CategoryView } from "./categoryview";
 btn?.classList.add("btn-product");
 
 export class ProductView extends View {
   private _categoryValue: string = "";
   private _productInventory: Entity<IProduct>;
   private _activeMenu: ActiveEntity;
-  constructor(inventory: Entity<IProduct>, activeClass: ActiveEntity) {
+  private _categoryDropdownValues: CategoryView;
+  constructor(
+    inventory: Entity<IProduct>,
+    activeClass: ActiveEntity,
+    categoryViewDropdown: CategoryView
+  ) {
     super();
-
+    this._categoryDropdownValues = categoryViewDropdown;
     this._productInventory = inventory;
     this._activeMenu = activeClass;
     btn?.addEventListener("click", this._openModal);
@@ -31,9 +37,40 @@ export class ProductView extends View {
   }
 
   public initUI() {
+    this._getDropDownData();
     this._createModal();
     this._createHeaderTable();
     this._renderTable();
+  }
+  private _getDropDownData() {
+    categoryElement!.innerHTML = "";
+    const categoryDropdownData = <ICategory[]>(
+      JSON.parse(this._categoryDropdownValues.getCategoryData().toString())
+    );
+    console.log("categoryDropdownData :::", categoryDropdownData);
+    let categoryDatas: ICategory[] = [];
+    for (let prop in categoryDropdownData) {
+      console.log("prop", prop);
+      if (categoryDropdownData.hasOwnProperty(prop)) {
+        categoryDatas.push(categoryDropdownData[prop]);
+      }
+    }
+    console.log("categoryDatas ::", categoryDatas);
+    const data = categoryDatas.map((item: ICategory) =>
+      this._fillDataIntoDropdown(item)
+    );
+    const firstOption = <string>(
+      "<option value='Select a Category'>Select a Category</option>"
+    );
+    console.log(data);
+    categoryElement!.innerHTML += firstOption + data;
+  }
+
+  _fillDataIntoDropdown(item: ICategory) {
+    console.log("item:::", item);
+    return `
+    <option data-id=${item.id} value="${item.title}">${item.title}</option>
+    `;
   }
 
   private _createModal() {
