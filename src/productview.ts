@@ -9,6 +9,7 @@ import {
   modalContentCategory,
   modalContentProduct,
   modalHeader,
+  btnDelete,
 } from "./dom";
 import { Product } from "./product";
 import Entity, { Types } from "./entity";
@@ -44,26 +45,26 @@ export class ProductView extends View {
   }
   private _getDropDownData() {
     categoryElement!.innerHTML = "";
-    const categoryDropdownData = <ICategory[]>(
-      JSON.parse(this._categoryDropdownValues.getCategoryData().toString())
-    );
-    console.log("categoryDropdownData :::", categoryDropdownData);
-    let categoryDatas: ICategory[] = [];
-    for (let prop in categoryDropdownData) {
-      console.log("prop", prop);
-      if (categoryDropdownData.hasOwnProperty(prop)) {
-        categoryDatas.push(categoryDropdownData[prop]);
+    const dataCategory = this._categoryDropdownValues.getCategoryData();
+    if (dataCategory) {
+      const categoryDropdownData = <ICategory[]>(
+        JSON.parse(dataCategory.toString())
+      );
+      let categoryDatas: ICategory[] = [];
+      for (let prop in categoryDropdownData) {
+        console.log("prop", prop);
+        if (categoryDropdownData.hasOwnProperty(prop)) {
+          categoryDatas.push(categoryDropdownData[prop]);
+        }
       }
+      const data = categoryDatas.map((item: ICategory) =>
+        this._fillDataIntoDropdown(item)
+      );
+      const firstOption = <string>(
+        "<option value='Select a Category'>Select a Category</option>"
+      );
+      categoryElement!.innerHTML += firstOption + data;
     }
-    console.log("categoryDatas ::", categoryDatas);
-    const data = categoryDatas.map((item: ICategory) =>
-      this._fillDataIntoDropdown(item)
-    );
-    const firstOption = <string>(
-      "<option value='Select a Category'>Select a Category</option>"
-    );
-    console.log(data);
-    categoryElement!.innerHTML += firstOption + data;
   }
 
   _fillDataIntoDropdown(item: ICategory) {
@@ -72,7 +73,10 @@ export class ProductView extends View {
     <option data-id=${item.id} value="${item.title}">${item.title}</option>
     `;
   }
-
+  private _deleteProduct() {
+    const id = <string>btnDelete?.getAttribute("data-id");
+    alert(id);
+  }
   private _createModal() {
     modalContentCategory?.classList.add("hidden");
     modalContentProduct?.classList.remove("hidden");
@@ -87,16 +91,18 @@ export class ProductView extends View {
         <th></th>`;
     }
   }
-  private _tableUIBody(item: Product, id: number) {
-    return `<tr class="table__row ${++id % 2 != 0 ? "odd" : ""}">
-    <td>${id}</td>
-    <td>${item.title}</td>
-    <td>${item.quantity}</td>
-    <td>${item.category}</td>
-    <td><button data-id="${item.id}" class="btn-delete" >
+  private _tableUIBody(item: Product, rowId: number) {
+    const { title, category, quantity, _id: id } = item;
+    console.log(id);
+    return `<tr class="table__row ${++rowId % 2 != 0 ? "odd" : ""}">
+    <td>${rowId}</td>
+    <td>${title}</td>
+    <td>${quantity}</td>
+    <td>${category}</td>
+    <td><button data-id="${id}" class="btn-delete" >
     <i class="ph-trash-bold "></i>
     <span>Delete</span>
-    </button> <button data-id="${item.id}" class="btn-edit">
+    </button> <button data-id="${id}" class="btn-edit">
     <i class="ph-pencil-simple-bold"></i>
     <span>Edit</span>
     </button></td>
