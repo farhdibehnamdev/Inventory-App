@@ -19,7 +19,7 @@ import { CategoryView } from "./categoryview";
 btn?.classList.add("btn-product");
 
 export class ProductView extends View {
-  private _categoryValue: string = "";
+  private _selectedValue: string;
   private _productInventory: Entity<IProduct>;
   private _activeMenu: ActiveEntity;
   private _categoryDropdownValues: CategoryView;
@@ -34,7 +34,10 @@ export class ProductView extends View {
     this._activeMenu = activeClass;
     btn?.addEventListener("click", this._openModal);
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
-    categoryElement?.addEventListener("change", this._selectCategoryHandler);
+    categoryElement?.addEventListener("change", (e: Event) => {
+      this._selectCategoryHandler(e);
+    });
+    this._selectedValue = "";
   }
 
   public initUI() {
@@ -52,7 +55,6 @@ export class ProductView extends View {
       );
       let categoryDatas: ICategory[] = [];
       for (let prop in categoryDropdownData) {
-        console.log("prop", prop);
         if (categoryDropdownData.hasOwnProperty(prop)) {
           categoryDatas.push(categoryDropdownData[prop]);
         }
@@ -66,9 +68,7 @@ export class ProductView extends View {
       categoryElement!.innerHTML += firstOption + data;
     }
   }
-
-  _fillDataIntoDropdown(item: ICategory) {
-    console.log("item:::", item);
+  private _fillDataIntoDropdown(item: ICategory) {
     return `
     <option data-id=${item.id} value="${item.title}">${item.title}</option>
     `;
@@ -93,7 +93,6 @@ export class ProductView extends View {
   }
   private _tableUIBody(item: Product, rowId: number) {
     const { title, category, quantity, _id: id } = item;
-    console.log(id);
     return `<tr class="table__row ${++rowId % 2 != 0 ? "odd" : ""}">
     <td>${rowId}</td>
     <td>${title}</td>
@@ -112,13 +111,17 @@ export class ProductView extends View {
     const select = document.querySelector<HTMLSelectElement>(
       ".form__select-category"
     );
-    this._categoryValue = select?.options[select?.selectedIndex].value!;
+    const value = select?.options[select?.selectedIndex].value!;
+    this._categorySetValue(value);
+  }
+  private _categorySetValue(value: string) {
+    if (value) this._selectedValue = value;
   }
   private _addButtonHandler() {
     if (this._activeMenu.active === Types.IProduct) {
       const newProduct = new Product(
         inputTitle?.value!,
-        this._categoryValue,
+        this._selectedValue,
         Number.parseInt(inputQuantity?.value!)
       );
       this._productInventory?.add(newProduct);
