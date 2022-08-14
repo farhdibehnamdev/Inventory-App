@@ -19,19 +19,28 @@ class Entity<T extends IProduct | ICategory> {
   }
   add(item: T): void {
     this._storage.push(item);
-    this._saveStorage(item);
+    this._saveStorage();
   }
 
   edit(id: string, item: T): T {
     return this._storage.find((x) => x.id === id) as T;
   }
-  delete(id: string): T[] {
-    return this._storage.filter((x) => x.id !== id);
+
+  delete(id: string): void {
+    console.log("id ::", id);
+    const data = this._storage.filter((x) => x.id !== id);
+    this._storage = data;
+    const currentEntity =
+      this.currentType === Types.IProduct ? "Product" : "Category";
+    localStorage.removeItem(currentEntity);
+    this._saveStorage();
   }
+
   search(title: string): T[] {
     return this._storage.filter((x) => x.title === title);
   }
-  _saveStorage(item: T): void {
+
+  _saveStorage(): void {
     if (this.currentType === Types.IProduct)
       localStorage.setItem("Product", JSON.stringify(this._storage));
     else {
