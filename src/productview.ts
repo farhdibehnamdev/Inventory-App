@@ -9,7 +9,8 @@ import {
   modalContentCategory,
   modalContentProduct,
   modalHeader,
-  btnDelete,
+  btnOk,
+  btnCanclePopup,
 } from "./dom";
 import { Product } from "./product";
 import Entity, { Types } from "./entity";
@@ -22,6 +23,7 @@ export class ProductView extends View {
   private _productInventory: Entity<IProduct>;
   private _activeMenu: ActiveEntity;
   private _categoryDropdownValues: CategoryView;
+  private _okButton!: HTMLButtonElement;
   constructor(
     inventory: Entity<IProduct>,
     activeClass: ActiveEntity,
@@ -31,13 +33,27 @@ export class ProductView extends View {
     this._categoryDropdownValues = categoryViewDropdown;
     this._productInventory = inventory;
     this._activeMenu = activeClass;
+    this._selectedValue = "";
+
+    // this._okButton = document.createElement("button");
     btn?.addEventListener("click", this._openModal);
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
     categoryElement?.addEventListener("change", (e: Event) => {
       this._selectCategoryHandler(e);
     });
-    this._selectedValue = "";
-    tableBody?.addEventListener("click", (e: Event) => this._deleteProduct(e));
+    tableBody?.addEventListener("click", (e: Event) =>
+      this._deleteButtonClicked(e)
+    );
+    btnOk?.addEventListener("click", () => this._deleteProduct());
+    btnCanclePopup?.addEventListener("click", () => this._closeDeletePopup());
+  }
+
+  private _deleteButtonClicked(e: Event) {
+    const btn = e.target as HTMLButtonElement;
+    if (btn.classList.contains("btn-delete")) {
+      this._okButton = btn;
+      this._openDeletePopup();
+    }
   }
 
   public initUI() {
@@ -73,14 +89,12 @@ export class ProductView extends View {
     <option data-id=${item.id} value="${item.title}">${item.title}</option>
     `;
   }
-  private _deleteProduct(e: Event) {
-    const btn = e.target as HTMLButtonElement;
-    if (btn.classList.contains("btn-delete")) {
-      const id = <string>btn?.getAttribute("data-id");
-      if (id) {
-        this._productInventory.delete(id);
-        this._renderTable();
-      }
+  private _deleteProduct(): void {
+    const id = <string>this._okButton?.getAttribute("data-id");
+    if (id) {
+      this._productInventory.delete(id);
+      this._closeDeletePopup();
+      this._renderTable();
     }
   }
   private _createModal() {
