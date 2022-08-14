@@ -45,14 +45,14 @@ export class ProductView extends View {
       this._deleteButtonClicked(e)
     );
     btnOk?.addEventListener("click", () => this._deleteProduct());
-    btnCanclePopup?.addEventListener("click", () => this._closeDeletePopup());
+    btnCanclePopup?.addEventListener("click", () => this._closeDeleteModal());
   }
 
   private _deleteButtonClicked(e: Event) {
     const btn = e.target as HTMLButtonElement;
     if (btn.classList.contains("btn-delete")) {
       this._okButton = btn;
-      this._openDeletePopup();
+      this._openDeleteModal();
     }
   }
 
@@ -93,7 +93,7 @@ export class ProductView extends View {
     const id = <string>this._okButton?.getAttribute("data-id");
     if (id) {
       this._productInventory.delete(id);
-      this._closeDeletePopup();
+      this._closeDeleteModal();
       this._renderTable();
     }
   }
