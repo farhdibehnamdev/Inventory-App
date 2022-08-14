@@ -240,6 +240,12 @@
   }
 }
 
+.popup-footer {
+  justify-content: center;
+  padding: 0.5;
+  gap: 1rem;
+}
+
 input[type="text"] {
   display: block;
   font-size: 1.5rem;
@@ -283,16 +289,29 @@ input[type="text"]:focus {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-.btn-submit {
+.btn-submit,
+.btn-ok {
   color: #fff;
   background-color: #0d6efd;
   border-color: #0d6efd;
 }
-.btn-submit:focus {
+.btn-submit:focus,
+.btn-ok:focus {
   color: #fff;
   background-color: #0b5ed7;
   border-color: #0a58ca;
   box-shadow: 0 0 0 0.25rem rgb(49 132 253 / 50%);
+}
+
+.btn-ok {
+  background-color: #cb4458;
+  border-color: #fe3db1;
+}
+
+.btn-ok:focus {
+  background-color: #cb4458;
+  border-color: #fe3db1;
+  box-shadow: 0 0 0 0.25rem rgba(233, 61, 104, 0.5);
 }
 
 .btn-cancel {
