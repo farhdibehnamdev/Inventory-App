@@ -1,9 +1,5 @@
 export const btn = document.querySelector<HTMLButtonElement>(".inventory__btn");
-export const tableThead = document.querySelector<HTMLTableElement>(
-  ".table-products thead tr"
-);
-export const tableBody =
-  document.querySelector<HTMLTableElement>(".table__tbody");
+
 //==================================================
 
 /// Menu Elements
@@ -38,3 +34,14 @@ export const inputQuantity =
   document.querySelector<HTMLInputElement>(".form__quantity");
 export const btnSubmit =
   document.querySelector<HTMLButtonElement>(".btn-submit");
+//=====================================================
+/// Table elements
+export const tableThead = document.querySelector<HTMLTableElement>(
+  ".table-products thead tr"
+);
+export const tableBody =
+  document.querySelector<HTMLTableElement>(".table__tbody");
+
+export const btnEdit = document.querySelector<HTMLButtonElement>(".btn-edit");
+export const btnDelete =
+  document.querySelector<HTMLButtonElement>(".btn-delete");
