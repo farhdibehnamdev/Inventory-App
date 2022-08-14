@@ -1,4 +1,4 @@
-import { selectedMenu, productMenu, categoryMenu } from "./dom";
+import { selectedMenu, productMenu, categoryMenu, btnDelete } from "./dom";
 import { ProductView } from "./productview";
 import { CategoryView } from "./categoryview";
 import { Types } from "./entity";
@@ -27,6 +27,7 @@ class App {
     );
     this._init();
   }
+
   private _selectedMenuHandler(e: Event): void {
     if (e instanceof PointerEvent) {
       let btn = e.target as HTMLButtonElement;

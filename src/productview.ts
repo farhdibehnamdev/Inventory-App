@@ -17,7 +17,6 @@ import { View } from "./view";
 import { ActiveEntity } from "./ActiveEntity";
 import { CategoryView } from "./categoryview";
 btn?.classList.add("btn-product");
-
 export class ProductView extends View {
   private _selectedValue: string;
   private _productInventory: Entity<IProduct>;
@@ -38,6 +37,7 @@ export class ProductView extends View {
       this._selectCategoryHandler(e);
     });
     this._selectedValue = "";
+    tableBody?.addEventListener("click", (e: Event) => this._deleteProduct(e));
   }
 
   public initUI() {
@@ -73,9 +73,15 @@ export class ProductView extends View {
     <option data-id=${item.id} value="${item.title}">${item.title}</option>
     `;
   }
-  private _deleteProduct() {
-    const id = <string>btnDelete?.getAttribute("data-id");
-    alert(id);
+  private _deleteProduct(e: Event) {
+    const btn = e.target as HTMLButtonElement;
+    if (btn.classList.contains("btn-delete")) {
+      const id = <string>btn?.getAttribute("data-id");
+      if (id) {
+        this._productInventory.delete(id);
+        this._renderTable();
+      }
+    }
   }
   private _createModal() {
     modalContentCategory?.classList.add("hidden");
@@ -92,14 +98,14 @@ export class ProductView extends View {
     }
   }
   private _tableUIBody(item: Product, rowId: number) {
-    const { title, category, quantity, _id: id } = item;
+    const { title, category, quantity, id } = item;
     return `<tr class="table__row ${++rowId % 2 != 0 ? "odd" : ""}">
     <td>${rowId}</td>
     <td>${title}</td>
     <td>${quantity}</td>
     <td>${category}</td>
     <td><button data-id="${id}" class="btn-delete" >
-    <i class="ph-trash-bold "></i>
+    <i class="ph-trash-bold"></i>
     <span>Delete</span>
     </button> <button data-id="${id}" class="btn-edit">
     <i class="ph-pencil-simple-bold"></i>
