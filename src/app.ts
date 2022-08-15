@@ -29,8 +29,8 @@ class App {
   }
 
   private _selectedMenuHandler(e: Event): void {
-    if (e instanceof PointerEvent) {
-      let btn = e.target as HTMLButtonElement;
+    if (e instanceof Event) {
+      let btn = e.target as HTMLAnchorElement;
       if (btn.classList.contains("menu__products")) {
         btn.classList.add("menu__selected");
         categoryMenu?.classList.remove("menu__selected");
