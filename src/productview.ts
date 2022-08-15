@@ -1,6 +1,7 @@
 import {
   btn,
   tableThead,
+  tableElement,
   tableBody,
   btnSubmit,
   inputTitle,
@@ -11,6 +12,7 @@ import {
   modalHeader,
   btnOk,
   btnCancelDeleteModal,
+  searchBox,
 } from "./dom";
 import { Product } from "./product";
 import Entity, { Types } from "./entity";
@@ -38,9 +40,8 @@ export class ProductView extends View {
     this._activeMenu = activeClass;
     this._selectedValue = "";
     this._editMode = false;
-    // this._okButton = document.createElement("button");
     btn?.addEventListener("click", this._openModal);
-    btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
+    btnSubmit?.addEventListener("click", this._addEidtButtonHandler.bind(this));
     categoryElement?.addEventListener("change", (e: Event) => {
       this._selectCategoryHandler(e);
     });
@@ -52,9 +53,50 @@ export class ProductView extends View {
     btnCancelDeleteModal?.addEventListener("click", () =>
       this._closeDeleteModal()
     );
+    searchBox?.addEventListener("keyup", (e: Event) =>
+      this._searchTableHandler(e)
+    );
+  }
+  private _searchTableHandler(e: Event): void {
+    if (e instanceof Event) {
+      let filter = searchBox?.value!;
+      let tr =
+        tableElement?.querySelectorAll<HTMLTableRowElement>(
+          ".table__tbody tr"
+        )!;
+      const func = this._debounce(() => this._filterTable(filter, tr), 1000);
+      func();
+    }
   }
 
-  private _addButtonHandler() {
+  private _filterTable(filter: string, tr: NodeListOf<HTMLTableRowElement>) {
+    console.log("filter", filter);
+    for (let i = 0; i < tr?.length; i++) {
+      let td = tr[i].getElementsByTagName("td");
+      for (let j = 0; j < td.length; j++) {
+        let tdata = td[j];
+        if (tdata) {
+          if (tdata.innerHTML.toLowerCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            break;
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+  }
+
+  private _debounce(func: Function, time: number): Function {
+    let timer: null | ReturnType<typeof setTimeout> = null;
+    return (...args: any) => {
+      clearTimeout(Number(timer));
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, time);
+    };
+  }
+  private _addEidtButtonHandler() {
     if (this._activeMenu.active === Types.IProduct) {
       const newProduct = new Product(
         inputTitle?.value!,
@@ -93,7 +135,6 @@ export class ProductView extends View {
       this._openDeleteModal();
     }
   }
-
   public initUI() {
     this._getDropDownData();
     this._createModal();
@@ -135,7 +176,6 @@ export class ProductView extends View {
       this._renderTable();
     }
   }
-
   private _editProduct(id: string, data: IProduct): void {
     this._productId = id;
     inputTitle!.value = data.title;
@@ -186,7 +226,6 @@ export class ProductView extends View {
   private _categorySetValue(value: string) {
     if (value) this._selectedValue = value;
   }
-
   private _renderTable(): void {
     tableBody!.innerText = "";
     const stringifyData = this._productStorage.storage;
