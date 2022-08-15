@@ -10,7 +10,7 @@ import {
   modalContentProduct,
   modalHeader,
   btnOk,
-  btnCanclePopup,
+  btnCancelDeleteModal,
 } from "./dom";
 import { Product } from "./product";
 import Entity, { Types } from "./entity";
@@ -20,10 +20,13 @@ import { CategoryView } from "./categoryview";
 btn?.classList.add("btn-product");
 export class ProductView extends View {
   private _selectedValue: string;
-  private _productInventory: Entity<IProduct>;
+  private _productStorage: Entity<IProduct>;
   private _activeMenu: ActiveEntity;
   private _categoryDropdownValues: CategoryView;
   private _okButton!: HTMLButtonElement;
+  private _updateButton!: HTMLButtonElement;
+  private _editMode: boolean;
+  private _productId!: string;
   constructor(
     inventory: Entity<IProduct>,
     activeClass: ActiveEntity,
@@ -31,24 +34,59 @@ export class ProductView extends View {
   ) {
     super();
     this._categoryDropdownValues = categoryViewDropdown;
-    this._productInventory = inventory;
+    this._productStorage = inventory;
     this._activeMenu = activeClass;
     this._selectedValue = "";
-
+    this._editMode = false;
     // this._okButton = document.createElement("button");
     btn?.addEventListener("click", this._openModal);
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
     categoryElement?.addEventListener("change", (e: Event) => {
       this._selectCategoryHandler(e);
     });
-    tableBody?.addEventListener("click", (e: Event) =>
-      this._deleteButtonClicked(e)
-    );
+    tableBody?.addEventListener("click", (e: Event) => {
+      this._deleteButtonHandler(e);
+      this._editButtonHandler(e);
+    });
     btnOk?.addEventListener("click", () => this._deleteProduct());
-    btnCanclePopup?.addEventListener("click", () => this._closeDeleteModal());
+    btnCancelDeleteModal?.addEventListener("click", () =>
+      this._closeDeleteModal()
+    );
   }
 
-  private _deleteButtonClicked(e: Event) {
+  private _addButtonHandler() {
+    if (this._activeMenu.active === Types.IProduct) {
+      const newProduct = new Product(
+        inputTitle?.value!,
+        this._selectedValue,
+        Number.parseInt(inputQuantity?.value!)
+      );
+      if (!this._editMode) {
+        this._productStorage?.add(newProduct);
+        this._renderTable();
+        this._closeModal();
+      } else {
+        this._productStorage.edit(this._productId, newProduct);
+        this._editMode = false;
+        this._renderTable();
+        this._closeModal();
+      }
+    }
+  }
+
+  private _editButtonHandler(e: Event) {
+    if (this._activeMenu.active === Types.IProduct) {
+      const btn = e.target as HTMLButtonElement;
+      if (btn.classList.contains("btn-edit")) {
+        this._updateButton = btn;
+        const id = btn.getAttribute("data-id") as string;
+        const data = this._productStorage.getDataById(id);
+        this._editProduct(id, data);
+      }
+    }
+  }
+
+  private _deleteButtonHandler(e: Event) {
     const btn = e.target as HTMLButtonElement;
     if (btn.classList.contains("btn-delete")) {
       this._okButton = btn;
@@ -92,10 +130,21 @@ export class ProductView extends View {
   private _deleteProduct(): void {
     const id = <string>this._okButton?.getAttribute("data-id");
     if (id) {
-      this._productInventory.delete(id);
+      this._productStorage.delete(id);
       this._closeDeleteModal();
       this._renderTable();
     }
+  }
+
+  private _editProduct(id: string, data: IProduct): void {
+    this._productId = id;
+    inputTitle!.value = data.title;
+    inputQuantity!.value = data.quantity.toString();
+    modalHeader!.innerHTML = "Edit Product";
+    categoryElement!.value = data.category;
+    this._selectedValue = data.category;
+    this._editMode = true;
+    this._openModal();
   }
   private _createModal() {
     modalContentCategory?.classList.add("hidden");
@@ -137,21 +186,10 @@ export class ProductView extends View {
   private _categorySetValue(value: string) {
     if (value) this._selectedValue = value;
   }
-  private _addButtonHandler() {
-    if (this._activeMenu.active === Types.IProduct) {
-      const newProduct = new Product(
-        inputTitle?.value!,
-        this._selectedValue,
-        Number.parseInt(inputQuantity?.value!)
-      );
-      this._productInventory?.add(newProduct);
-      this._renderTable();
-      this._closeModal();
-    }
-  }
+
   private _renderTable(): void {
     tableBody!.innerText = "";
-    const stringifyData = this._productInventory.storage;
+    const stringifyData = this._productStorage.storage;
     if (stringifyData) {
       const obj = JSON.parse(stringifyData.toString());
 

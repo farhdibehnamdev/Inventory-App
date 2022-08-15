@@ -1,4 +1,4 @@
-import { modalPopup, deletePopup } from "./dom";
+import { modalPopup, deleteButtonModal } from "./dom";
 
 export class View {
   private _span: HTMLElement;
@@ -19,11 +19,11 @@ export class View {
     modalPopup.style.display = "block";
   }
   protected _openDeleteModal() {
-    deletePopup.style.display = "block";
+    deleteButtonModal.style.display = "block";
   }
 
   protected _closeDeleteModal() {
-    deletePopup.style.display = "none";
+    deleteButtonModal.style.display = "none";
   }
   protected _closeModal(): void {
     modalPopup.style.display = "none";
