@@ -24,6 +24,9 @@ export class CategoryView extends View {
     this._activeMenu = activeClass;
     btn?.addEventListener("click", this._openModal);
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
+    tableBody?.addEventListener("click", (e: Event) => {
+      this._deleteButtonHandler(e);
+    });
   }
 
   initCategoryUI() {
@@ -35,6 +38,13 @@ export class CategoryView extends View {
   getCategoryData(): ICategory[] {
     const data = <ICategory[]>this._categoryStorage.storage;
     return data;
+  }
+  private _deleteButtonHandler(e: Event): void {
+    const btn = e.target as HTMLButtonElement;
+    if (btn.classList.contains("btn-delete")) {
+      this._okButton = btn;
+      this._openDeleteModal();
+    }
   }
   private _deleteCategory(): void {
     const id = <string>this._okButton?.getAttribute("data-id");
