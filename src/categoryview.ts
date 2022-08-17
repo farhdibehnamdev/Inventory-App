@@ -15,11 +15,12 @@ import { View } from "./view";
 import { ActiveEntity } from "./ActiveEntity";
 
 export class CategoryView extends View {
-  private _categoryInventory: Entity<ICategory>;
+  private _categoryStorage: Entity<ICategory>;
   private _activeMenu: ActiveEntity;
+  private _okButton: any;
   constructor(categoryInventory: Entity<ICategory>, activeClass: ActiveEntity) {
     super();
-    this._categoryInventory = categoryInventory;
+    this._categoryStorage = categoryInventory;
     this._activeMenu = activeClass;
     btn?.addEventListener("click", this._openModal);
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
@@ -32,10 +33,17 @@ export class CategoryView extends View {
   }
 
   getCategoryData(): ICategory[] {
-    const data = <ICategory[]>this._categoryInventory.storage;
+    const data = <ICategory[]>this._categoryStorage.storage;
     return data;
   }
-
+  private _deleteCategory(): void {
+    const id = <string>this._okButton?.getAttribute("data-id");
+    if (id) {
+      this._categoryStorage.delete(id);
+      this._closeDeleteModal();
+      this._renderTable();
+    }
+  }
   private _createModal() {
     modalContentProduct?.classList.add("hidden");
     modalContentCategory?.classList.remove("hidden");
@@ -51,7 +59,7 @@ export class CategoryView extends View {
   _addButtonHandler() {
     if (this._activeMenu.active === Types.ICategory) {
       const newCategory = new Category(categoryInputTitle?.value!);
-      this._categoryInventory.add(newCategory);
+      this._categoryStorage.add(newCategory);
       this._renderTable();
       this._closeModal();
     }
@@ -59,7 +67,7 @@ export class CategoryView extends View {
 
   private _renderTable(): void {
     tableBody!.innerText = "";
-    const stringifyData = this._categoryInventory.storage;
+    const stringifyData = this._categoryStorage.storage;
     if (stringifyData) {
       const obj = JSON.parse(stringifyData.toString());
       let categories: ICategory[] = [];
