@@ -69,8 +69,10 @@ export class ProductView extends View {
     }
   }
 
-  private _filterTable(filter: string, tr: NodeListOf<HTMLTableRowElement>) {
-    console.log("filter", filter);
+  private _filterTable(
+    filter: string,
+    tr: NodeListOf<HTMLTableRowElement>
+  ): void {
     for (let i = 0; i < tr?.length; i++) {
       let td = tr[i].getElementsByTagName("td");
       for (let j = 0; j < td.length; j++) {
@@ -96,7 +98,7 @@ export class ProductView extends View {
       }, time);
     };
   }
-  private _addEidtButtonHandler() {
+  private _addEidtButtonHandler(): void {
     if (this._activeMenu.active === Types.IProduct) {
       const newProduct = new Product(
         inputTitle?.value!,
@@ -116,7 +118,7 @@ export class ProductView extends View {
     }
   }
 
-  private _editButtonHandler(e: Event) {
+  private _editButtonHandler(e: Event): void {
     if (this._activeMenu.active === Types.IProduct) {
       const btn = e.target as HTMLButtonElement;
       if (btn.classList.contains("btn-edit")) {
@@ -128,20 +130,20 @@ export class ProductView extends View {
     }
   }
 
-  private _deleteButtonHandler(e: Event) {
+  private _deleteButtonHandler(e: Event): void {
     const btn = e.target as HTMLButtonElement;
     if (btn.classList.contains("btn-delete")) {
       this._okButton = btn;
       this._openDeleteModal();
     }
   }
-  public initUI() {
+  public initUI(): void {
     this._getDropDownData();
     this._createModal();
     this._createHeaderTable();
     this._renderTable();
   }
-  private _getDropDownData() {
+  private _getDropDownData(): void {
     categoryElement!.innerHTML = "";
     const dataCategory = this._categoryDropdownValues.getCategoryData();
     if (dataCategory) {
@@ -163,7 +165,7 @@ export class ProductView extends View {
       categoryElement!.innerHTML += firstOption + data;
     }
   }
-  private _fillDataIntoDropdown(item: ICategory) {
+  private _fillDataIntoDropdown(item: ICategory): string {
     return `
     <option data-id=${item.id} value="${item.title}">${item.title}</option>
     `;
@@ -186,7 +188,7 @@ export class ProductView extends View {
     this._editMode = true;
     this._openModal();
   }
-  private _createModal() {
+  private _createModal(): void {
     modalContentCategory?.classList.add("hidden");
     modalContentProduct?.classList.remove("hidden");
     modalHeader!.innerHTML = "Add Product";
@@ -200,7 +202,7 @@ export class ProductView extends View {
         <th></th>`;
     }
   }
-  private _tableUIBody(item: Product, rowId: number) {
+  private _tableUIBody(item: Product, rowId: number): string {
     const { title, category, quantity, id } = item;
     return `<tr class="table__row ${++rowId % 2 != 0 ? "odd" : ""}">
     <td>${rowId}</td>
@@ -216,14 +218,14 @@ export class ProductView extends View {
     </button></td>
   </tr>`;
   }
-  private _selectCategoryHandler(e: Event) {
+  private _selectCategoryHandler(e: Event): void {
     const select = document.querySelector<HTMLSelectElement>(
       ".form__select-category"
     );
     const value = select?.options[select?.selectedIndex].value!;
     this._categorySetValue(value);
   }
-  private _categorySetValue(value: string) {
+  private _categorySetValue(value: string): void {
     if (value) this._selectedValue = value;
   }
   private _renderTable(): void {
