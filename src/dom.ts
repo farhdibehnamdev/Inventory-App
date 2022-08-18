@@ -1,5 +1,6 @@
 export const btn = document.querySelector<HTMLButtonElement>(".inventory__btn");
-
+export const searchBox =
+  document.querySelector<HTMLInputElement>(".inventory__search");
 //==================================================
 
 /// Menu Elements
@@ -36,12 +37,19 @@ export const btnSubmit =
   document.querySelector<HTMLButtonElement>(".btn-submit");
 //=====================================================
 /// Table elements
-export const tableThead = document.querySelector<HTMLTableElement>(
-  ".table-products thead tr"
-);
+export const tableElement = document.querySelector<HTMLTableElement>(".table");
+export const tableThead =
+  document.querySelector<HTMLTableElement>(".table thead tr");
 export const tableBody =
   document.querySelector<HTMLTableElement>(".table__tbody");
 
 export const btnEdit = document.querySelector<HTMLButtonElement>(".btn-edit");
 export const btnDelete =
   document.querySelector<HTMLButtonElement>(".btn-delete");
+//========================================================
+/// Delete Modal Elements
+export const deleteButtonModal =
+  document.querySelector<HTMLElement>("#deletePopup")!;
+export const btnOk = document.querySelector<HTMLElement>(".btn-ok");
+export const btnCancelDeleteModal =
+  document.querySelector<HTMLElement>(".btn-cancelPopup");
