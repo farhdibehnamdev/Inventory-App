@@ -8,6 +8,8 @@ import {
   modalContentProduct,
   modalHeader,
   categoryElement,
+  btnOk,
+  inputTitle,
 } from "./dom";
 import Entity, { Types } from "./entity";
 import { Category } from "./category";
@@ -18,21 +20,62 @@ export class CategoryView extends View {
   private _categoryStorage: Entity<ICategory>;
   private _activeMenu: ActiveEntity;
   private _okButton: any;
+  private _updateButton!: HTMLButtonElement;
+  private _editMode: boolean;
+  private _categoryId!: string;
   constructor(categoryInventory: Entity<ICategory>, activeClass: ActiveEntity) {
     super();
+    this._editMode = false;
     this._categoryStorage = categoryInventory;
     this._activeMenu = activeClass;
     btn?.addEventListener("click", this._openModal);
     btnSubmit?.addEventListener("click", this._addButtonHandler.bind(this));
     tableBody?.addEventListener("click", (e: Event) => {
       this._deleteButtonHandler(e);
+      this._editButtonHandler(e);
     });
+    btnOk?.addEventListener("click", () => this._deleteCategory());
   }
 
   initCategoryUI() {
     this._createModal();
     this._createHeaderTable();
     this._renderTable();
+  }
+  private _addEidtButtonHandler(): void {
+    if (this._activeMenu.active === Types.ICategory) {
+      const newCategory = new Category(inputTitle!.value);
+      if (!this._editMode) {
+        this._categoryStorage?.add(newCategory);
+        this._renderTable();
+        this._closeModal();
+      } else {
+        this._categoryStorage.edit(this._categoryId, newCategory);
+        this._editMode = false;
+        this._renderTable();
+        this._closeModal();
+      }
+    }
+  }
+
+  private _editButtonHandler(e: Event): void {
+    if (this._activeMenu.active === Types.ICategory) {
+      const btn = e.target as HTMLButtonElement;
+      if (btn.classList.contains("btn-edit")) {
+        this._updateButton = btn;
+        const id = btn.getAttribute("data-id") as string;
+        const data = this._categoryStorage.getDataById(id);
+        this._editCategory(id, data);
+      }
+    }
+  }
+
+  private _editCategory(id: string, data: ICategory): void {
+    this._categoryId = id;
+    inputTitle!.value = data.title;
+    modalHeader!.innerHTML = "Edit Category";
+    this._editMode = true;
+    this._openModal();
   }
 
   getCategoryData(): ICategory[] {
@@ -54,7 +97,7 @@ export class CategoryView extends View {
       this._renderTable();
     }
   }
-  private _createModal() {
+  private _createModal(): void {
     modalContentProduct?.classList.add("hidden");
     modalContentCategory?.classList.remove("hidden");
     modalHeader!.innerHTML = "Add Category";
@@ -74,7 +117,6 @@ export class CategoryView extends View {
       this._closeModal();
     }
   }
-
   private _renderTable(): void {
     tableBody!.innerText = "";
     const stringifyData = this._categoryStorage.storage;
